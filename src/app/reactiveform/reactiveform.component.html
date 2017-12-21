@@ -39,8 +39,8 @@
                     (keyup)="shippingDataChange('country')"
             >
               <option [ngValue]="null" hidden>Choose your country</option>
-              <option *ngFor="let option of options.countryOptions" [ngValue]="option">
-                {{option.label}}
+              <option *ngFor="let option of options" [ngValue]="option">
+                {{option.Country}}
               </option>
             </select>
         </div>
@@ -81,6 +81,7 @@
                    [ngClass]="setClass('postalCode')"
                    formControlName="postalCode"
                    placeholder="Postal Code..." 
+                   [mask] = "postalCodeMask"
                    (keyup)="shippingDataChange('postalCode')"
             >
         </div>
@@ -112,8 +113,8 @@
                     [ngClass]="setClass('shipCountry')"
             >
               <option [ngValue]="null" hidden>Choose shipping country</option>
-              <option *ngFor="let option of options.countryOptions" [ngValue]="option">
-                {{option.label}}
+              <option *ngFor="let option of options" [ngValue]="option">
+                {{option.Country}}
               </option>
             </select>
         </div>
@@ -151,20 +152,9 @@
                    class="form-postal-code form-control" 
                    [ngClass]="setClass('shipPostalCode')"
                    formControlName="shipPostalCode"
-                   placeholder="Shipping Postal Code..." 
+                   placeholder="Shipping Postal Code..."
+                   [mask] = "shipPostalCodeMask" 
             >
-        </div>
-        <div class="form-group">
-            <label class="sr-only" for="form-address2">Shiping Legal</label>
-            <select class = "selectpicker form-control" 
-                    formControlName="shipLegal"
-                    [ngClass]="setClass('shipLegal')"
-            >
-              <option [ngValue]="null" hidden>Shipping Legal</option>
-              <option *ngFor="let option of options.legalOptions" [ngValue]="option">
-                {{option.label}}
-              </option>
-            </select>
         </div>
         <button type="submit" class="btn btn-next" (click)="nextBtn()">Next</button>
       </div>

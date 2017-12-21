@@ -5,7 +5,7 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { FormComponent } from './form/form.component';
-import {FormsModule} from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { ReactiveformComponent } from './reactiveform/reactiveform.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
@@ -13,6 +13,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { UserService } from './services/user.service';
 import { HomeComponent } from './home/home.component';
 import { Routes, RouterModule } from '@angular/router';
+import { HttpModule } from '@angular/http';
 
 /*const routes: Routes = [
   { path: '', redirectTo: '/register', pathMatch: 'full' },
@@ -33,9 +34,12 @@ import { Routes, RouterModule } from '@angular/router';
     FormsModule,
     ReactiveFormsModule,
     NgxMaskModule.forRoot(),
-    HttpClientModule
+    HttpClientModule,
+    HttpModule
   ],
-  providers: [UserService],
+  providers: [
+    UserService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

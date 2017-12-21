@@ -1,4 +1,8 @@
-export const Options = {
+import * as data from '../data.files/postal-codes.json';
+
+var obj = (<any>data);
+
+var legal = {
     legalOptions: [
         { 
             id: 1, 
@@ -9,19 +13,6 @@ export const Options = {
             label: 'Individual' 
         }
     ],
-
-    countryOptions : [
-        { 
-            id: 1, 
-            label: 'Armenia' 
-        }, 
-        { 
-            id: 2, 
-            label: 'America' 
-        },
-        { 
-            id: 3, 
-            label: 'Russia' 
-        }
-    ],
 }
+
+export const Options = Object.assign(obj, legal);

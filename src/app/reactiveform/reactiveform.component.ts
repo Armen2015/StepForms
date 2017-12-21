@@ -15,26 +15,34 @@ export class ReactiveformComponent implements OnInit {
   step1: FormGroup;
   step2: FormGroup;
   step3: FormGroup;
-  currentStep = 2;
+  currentStep = 1;
   // card valid
   cardDateValid: boolean;
   cardNumberValid: boolean;
   userNameValid: boolean;
   isDataChecked: boolean;
-  private user: User;
+  user: User;
   options = null;
+  postalCodeMask: string;
+  shipPostalCodeMask: string;
+  data;
 
   private step1SubmitAttempt: boolean = false;
   private step2SubmitAttempt: boolean = false;
   private step3SubmitAttempt: boolean = false;
 
-  constructor(private fb: FormBuilder, private userService: UserService,) { }
+  constructor(
+    private fb: FormBuilder, 
+    private userService: UserService
+  ) { }
   ngOnInit() {
     this.user = new User();
-    this.options = Object.create(Options);
+    this.options = Options;
     this.cardDateValid = true;
     this.cardNumberValid = true;
     this.isDataChecked = false;
+    this.postalCodeMask = '0000';
+    this.shipPostalCodeMask = '0000';
     // First form init
     this.step1 = this.fb.group({
       firstName: ['', Validators.required],
@@ -50,8 +58,7 @@ export class ReactiveformComponent implements OnInit {
       shipCity: ['', Validators.required],
       shipAddress: ['', Validators.required],
       shipAddress2: '',
-      shipPostalCode: ['', Validators.required],
-      shipLegal:  new FormControl(null, Validators.required)
+      shipPostalCode: ['', Validators.required]
     });
     // Second form init
     this.step2 = this.fb.group({
@@ -74,7 +81,7 @@ export class ReactiveformComponent implements OnInit {
   nextBtn() {
     var form = this['step' + this.currentStep];
     this["step" + this.currentStep + 'SubmitAttempt'] = true;
-    console.log(form.get('isDataChecked'));
+    //console.log(form.get('isDataChecked'));
     if (!form.valid) {
       console.log(form.controls);
       Object.keys(form.controls).forEach(field => { 
@@ -161,10 +168,16 @@ export class ReactiveformComponent implements OnInit {
 
   // If checkbox checked, watch for data changes
   shippingDataChange(form_element){
+    console.log('AAA');
     if(!this.isDataChecked) return;
     var shipKey = 'ship' + form_element.charAt(0).toUpperCase() + form_element.slice(1);
     this.step1.get(shipKey).setValue(this.step1.get(form_element).value);
   }
+
+  // 
+  // countryChange() {
+  //   console.log('AAA', this.step1.get('country').value);
+  // }
 
   // Check if username exists
   checkUserName(element) {
