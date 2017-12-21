@@ -1,0 +1,285 @@
+<div class="row">
+  <div class="col-sm-6 col-sm-offset-3 form-box">
+    <form *ngIf = 'currentStep == 1' class="registration-form" [formGroup]="step1"  novalidate>
+      <div class="form-top">
+          <div class="form-top-left">
+              <h3>Step 1 / 3</h3>
+              <p>Tell us who you are:</p>
+          </div>
+          <div class="form-top-right">
+              <i class="fa fa-user"></i>
+          </div>
+      </div>
+      <div class="form-bottom">
+        <div class="form-group">
+            <label class="sr-only" for="form-first-name">First name</label>
+            <input class="form-control" 
+                   class="form-first-name form-control"
+                   [ngClass]="setClass('firstName')" 
+                   formControlName="firstName"
+                   placeholder="First name..." 
+                   mask="SSSSSSSSSSSS"
+            >
+        </div>
+        <div class="form-group">
+            <label class="sr-only" for="form-last-name">Last name</label>
+            <input class="form-control" 
+                   class="form-last-name form-control" 
+                   [ngClass]="setClass('lastName')" 
+                   formControlName="lastName"
+                   placeholder="Last name..." 
+                   mask="SSSSSSSSSSSS"
+            >
+        </div>
+        <div class="form-group">
+            <label class="sr-only" for="form-country">Country</label>
+            <select class = "selectpicker form-control" 
+                    formControlName="country"
+                    [ngClass]="setClass('country')"
+                    (keyup)="shippingDataChange('country')"
+            >
+              <option [ngValue]="null" hidden>Choose your country</option>
+              <option *ngFor="let option of options.countryOptions" [ngValue]="option">
+                {{option.label}}
+              </option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="sr-only" for="form-city">City</label>
+            <input class="form-control" 
+                   class="form-city form-control" 
+                   [ngClass]="setClass('city')"
+                   formControlName="city"
+                   placeholder="City..." 
+                   mask="SSSSSSSSSSSS"
+                   (keyup)="shippingDataChange('city')"
+            >
+        </div>
+        <div class="form-group">
+            <label class="sr-only" for="form-address">Address</label>
+            <input class="form-control" 
+                   class="form-address form-control" 
+                   [ngClass]="setClass('address')"
+                   formControlName="address"
+                   placeholder="Address..." 
+                   (keyup)="shippingDataChange('address')"
+            >
+        </div>
+        <div class="form-group">
+            <label class="sr-only" for="form-address2">Address2</label>
+            <input class="form-control" 
+                   class="form-address2 form-control" 
+                   formControlName="address2"
+                   placeholder="Address2..." 
+                   (keyup)="shippingDataChange('address2')"
+            >
+        </div>
+        <div class="form-group">
+            <label class="sr-only" for="form-postalCode">Postal Code</label>
+            <input class="form-control" 
+                   class="form-postal-code form-control" 
+                   [ngClass]="setClass('postalCode')"
+                   formControlName="postalCode"
+                   placeholder="Postal Code..." 
+                   (keyup)="shippingDataChange('postalCode')"
+            >
+        </div>
+        <div class="form-group">
+            <label class="sr-only" for="form-legal">Legal</label>
+            <select class = "selectpicker form-control" 
+                    formControlName="legal"
+                    [ngClass]="setClass('legal')"
+                    (change)="shippingDataChange('legal')"
+            >
+              <option [ngValue]="null" hidden>Legal</option>
+              <option *ngFor="let option of options.legalOptions" [ngValue]="option">
+                {{option.label}}
+              </option>
+            </select>
+        </div>
+        <!-- Shipping details -->
+        <div class="form-group">
+            <input type='checkbox' 
+                   formControlName="isDataChecked" 
+                   (ngModelChange)="chBoxChange(s)"
+            >
+            <label>Use filled data for shipping</label>
+        </div>
+        <div class="form-group">
+            <label class="sr-only" for="form-country">Shipping country</label>
+            <select class = "selectpicker form-control" 
+                    formControlName="shipCountry"
+                    [ngClass]="setClass('shipCountry')"
+            >
+              <option [ngValue]="null" hidden>Choose shipping country</option>
+              <option *ngFor="let option of options.countryOptions" [ngValue]="option">
+                {{option.label}}
+              </option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="sr-only" for="form-city">Shipping city</label>
+            <input class="form-control" 
+                   class="form-city form-control" 
+                   [ngClass]="setClass('shipCity')"
+                   formControlName="shipCity"
+                   placeholder="Shipping city..." 
+                   mask="SSSSSSSSSSSS"
+            >
+        </div>
+        <div class="form-group">
+            <label class="sr-only" for="form-address">Shipping address</label>
+            <input class="form-control" 
+                   class="form-address form-control" 
+                   [ngClass]="setClass('shipAddress')"
+                   formControlName="shipAddress"
+                   placeholder="Shipping address..." 
+            >
+        </div>
+        <div class="form-group">
+            <label class="sr-only" for="form-address2">Shipping address2</label>
+            <input class="form-control" 
+                   class="form-address2 form-control" 
+                   [ngClass]="{ 'disabled': isDataChecked }"
+                   formControlName="shipAddress2"
+                   placeholder="Shiping address2..." 
+            >
+        </div>
+        <div class="form-group">
+            <label class="sr-only" for="form-postalCode">Shiping Postal Code</label>
+            <input class="form-control" 
+                   class="form-postal-code form-control" 
+                   [ngClass]="setClass('shipPostalCode')"
+                   formControlName="shipPostalCode"
+                   placeholder="Shipping Postal Code..." 
+            >
+        </div>
+        <div class="form-group">
+            <label class="sr-only" for="form-address2">Shiping Legal</label>
+            <select class = "selectpicker form-control" 
+                    formControlName="shipLegal"
+                    [ngClass]="setClass('shipLegal')"
+            >
+              <option [ngValue]="null" hidden>Shipping Legal</option>
+              <option *ngFor="let option of options.legalOptions" [ngValue]="option">
+                {{option.label}}
+              </option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-next" (click)="nextBtn()">Next</button>
+      </div>
+    </form>
+
+    <!-- Second step -->
+    <form *ngIf = 'currentStep == 2' class="registration-form" [formGroup]="step2"  novalidate>
+        <div class="form-top">
+            <div class="form-top-left">
+                <h3>Step 2 / 3</h3>
+                <p>Choose a package:</p>
+            </div>
+            <div class="form-top-right">
+                <i class="fa fa-window-restore"></i>
+            </div>
+        </div>
+        <div class="form-bottom">
+            <div class="form-group">
+                <label class="sr-only" for="form-userName">UserName</label>
+                <input class="form-control" 
+                   class="form-user-name form-control"
+                   [ngClass]="setClass('userName')" 
+                   formControlName="userName"
+                   placeholder="User name..." 
+                   mask="SSSSSSS000000"
+                   (keyup)="checkUserName(step2.get('userName'))"
+                >
+                <span *ngIf = "userNameValid" class = 'username_alert'>Username already exists!</span>
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="form-password">Password</label>
+                <input class="form-control" type="password"
+                   class="form-password form-control"
+                   [ngClass]="setClass('password')" 
+                   formControlName="password"
+                   placeholder="Password..." 
+                >
+            </div>
+            <div class="form-group">
+                <input type="radio" name="package" 
+                       value = 'Standard Package'
+                       formControlName="package" 
+                       [ngClass]="setClass('package')"
+                       [(ngModel)]='package'
+                > Standard Package <br>
+                <input type="radio" name="package"
+                       value = 'Premium Package'  
+                       formControlName="package" 
+                       [ngClass]="setClass('package')"
+                       [(ngModel)]='package'                          
+                > Premium Package
+            </div>
+            <button type="button" class="btn btn-previous" (click)="prev()">Previous</button>
+            <button type="submit" class="btn btn-next" (click)="nextBtn()">Next</button>
+        </div>
+    </form>
+
+    <!-- Third step -->
+    <form *ngIf = 'currentStep == 3' class="registration-form" [formGroup]="step3"  novalidate>
+        <div class="form-top">
+            <div class="form-top-left">
+                <h3>Step 3 / 3</h3>
+                <p>Fill your credit card details:</p>
+            </div>
+            <div class="form-top-right">
+                <i class="fa fa-credit-card-alt"></i>
+            </div>
+        </div>
+        <div class="form-bottom">
+            <div class="form-group">
+                <label class="sr-only" for="form-credit-card-number">Credit Card number</label>
+                <input class="form-control" 
+                       class="form-credit-card-number form-control" 
+                       [ngClass]="{'input-error': !cardNumberValid && step3.get('cardNumber').touched }"
+                       formControlName="cardNumber"
+                       placeholder="Credit Card number..." 
+                       mask="0000 0000 0000 0000"
+                       (ngModelChange)="numberChange($event)"
+                >
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="form-credit-card-name">Credit Card name</label>
+                <input class="form-control" 
+                       class="form-credit-card-name form-control" 
+                       [ngClass]="setClass('cardName')" 
+                       formControlName="cardName"
+                       placeholder="Credit Card name..." 
+                       mask="SSSSSSSSSSSS"
+                >
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="form-credit-card-cvc">Credit Card cvc</label>
+                <input class="form-control" 
+                       class="form-credit-card-cvc form-control" 
+                       [ngClass]="setClass('cardCvc')" 
+                       formControlName="cardCvc"
+                       placeholder="Credit Card cvc..."  
+                       mask="0000"
+                >
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="form-credit-card-expiration-date">Credit Card expiration date</label>
+                <input class="form-control" name = "form_credit_card_expiration_date"
+                       class="form-credit-card-expiration-date form-control"           
+                       [ngClass]="{'input-error': !cardDateValid && step3.get('cardExpDate').touched }"
+                       formControlName="cardExpDate"
+                       placeholder="Credit Card expiration date..."
+                       (ngModelChange)="dateChange($event)"
+                       mask="00/00/0000"
+                >
+            </div>
+            <button type="button" class="btn btn-previous" (click)="prev()">Previous</button>
+            <button type="submit" class="btn" (click)="nextBtn()">Sign me up!</button>
+        </div>
+    </form>
+    
+  </div>
+</div>

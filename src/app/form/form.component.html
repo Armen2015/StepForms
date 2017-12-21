@@ -1,0 +1,221 @@
+<div class="row">
+  <div class="col-sm-6 col-sm-offset-3 form-box">
+      
+      <!-- First step -->
+      <form role="form"  class="registration-form" (ngSubmit)="f1.form.valid && next()"  #f1="ngForm" novalidate> 
+        <div *ngIf = "step == 1">
+          <div class="form-top">
+              <div class="form-top-left">
+                  <h3>Step 1 / 3</h3>
+                  <p>Tell us who you are:</p>
+              </div>
+              <div class="form-top-right">
+                  <i class="fa fa-user"></i>
+              </div>
+          </div>
+          <div class="form-bottom">
+              <div class="form-group">
+                  <label class="sr-only" for="form-first-name">First name</label>
+                  <input type="text" name="form_first_name" 
+                          placeholder="First name..." 
+                          class="form-first-name form-control" 
+                          [ngClass] = "{'input-error': (f1.submitted && !form_first_name.valid)}"
+                          id="form-first-name"
+                          [(ngModel)]="user.firstName"
+                          #form_first_name="ngModel"
+                          pattern="[a-zA-Z]+$"
+                          required
+                  >
+              </div>
+              <div class="form-group">
+                  <label class="sr-only" for="form-last-name">Last name</label>
+                  <input type="text" name="form_last_name" 
+                          placeholder="Last name..." 
+                          class="form-last-name form-control" 
+                          [ngClass] = "{'input-error': (f1.submitted && !form_last_name.valid)}"
+                          id="form-last-name"
+                          [(ngModel)]="user.lastName"
+                          #form_last_name="ngModel"
+                          pattern="[a-zA-Z]+$"
+                          required
+                  >
+              </div>
+              <div class="form-group">
+                <label class="sr-only" for="form-country">Country</label>
+                <input type="text" name="form_country" 
+                        placeholder="Country..." 
+                        class="form-country form-control" 
+                        [ngClass] = "{'input-error': (f1.submitted && !form_country.valid)}"
+                        id="form-country"
+                        [(ngModel)]="user.country"
+                        #form_country="ngModel"
+                        pattern="[a-zA-Z]+$"
+                        required
+                >
+              </div>
+              <div class="form-group">
+                <label class="sr-only" for="form-city">City</label>
+                <input type="text" name="form_city" 
+                        placeholder="City..." 
+                        class="form-city form-control" 
+                        [ngClass] = "{'input-error': (f1.submitted && !form_city.valid)}"
+                        id="form-city"
+                        [(ngModel)]="user.city"
+                        #form_city="ngModel"
+                        pattern="[a-zA-Z]+$"
+                        required
+                >
+              </div>
+              <div class="form-group">
+                <label class="sr-only" for="form-address">Address</label>
+                <input type="text" name="form_address" 
+                        placeholder="Address..." 
+                        class="form-address form-control" 
+                        [ngClass] = "{'input-error': (f1.submitted && !form_address.valid)}"
+                        id="form-address"
+                        [(ngModel)]="user.address"
+                        #form_address="ngModel"
+                        pattern="^[a-zA-Z0-9_.-]*$"
+                        required
+                >
+              </div>
+              <div class="form-group">
+                <label class="sr-only" for="form-address2">Address2</label>
+                <input type="text" name="form_address2" 
+                        placeholder="Address2..." 
+                        class="form-address2 form-control" 
+                        id="form-address2"
+                        [(ngModel)]="user.address2"
+                        pattern="^[a-zA-Z0-9_.-]*$"
+                        #form_address2="ngModel"
+                >
+              </div>
+              <div class="form-group">
+                <label class="sr-only" for="form-address2">Legal</label>
+                <select name = "form_legal" [(ngModel)]="user.legal" 
+                        class = "selectpicker form-control" 
+                        [ngClass] = "{'input-error': (f1.submitted && !form_legal.valid)}"
+                        #form_legal="ngModel"
+                        required>
+                  <option [ngValue]="item" selected  hidden>Legal</option>
+                  <option value="Company">Company</option>
+                  <option value="Individual">Individual</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-next">Next</button>
+          </div>
+        </div>
+      </form>
+
+      <!-- Second step -->
+      <form role="form"  class="registration-form" (ngSubmit)="f2.form.valid && next()"  #f2="ngForm" novalidate>
+        <div *ngIf = "step == 2">
+          <div class="form-top">
+              <div class="form-top-left">
+                  <h3>Step 2 / 3</h3>
+                  <p>Choose a package:</p>
+              </div>
+              <div class="form-top-right">
+                  <i class="fa fa-window-restore"></i>
+              </div>
+          </div>
+          <div class="form-bottom">
+              <div class="form-group">
+                  <label class="sr-only" for="form-email">Email</label>
+                  <input type="radio" name="package" 
+                        [checked]="true"
+                  > Standard Package <br>
+                  <input type="radio" name="package"                                
+                  > Premium Package
+              </div>
+              <button type="button" class="btn btn-previous" (click)="prev()">Previous</button>
+              <button type="submit" class="btn btn-next">Next</button>
+          </div>
+        </div>
+      </form>
+
+      <!-- Third step -->
+      <form role="form"  class="registration-form" (ngSubmit)="f3.form.valid && cardDate && sign()"  #f3="ngForm" novalidate>
+        <div *ngIf = "step == 3">
+          <div class="form-top">
+              <div class="form-top-left">
+                  <h3>Step 3 / 3</h3>
+                  <p>Fill your credit card details:</p>
+              </div>
+              <div class="form-top-right">
+                  <i class="fa fa-credit-card-alt"></i>
+              </div>
+          </div>
+          <div class="form-bottom">
+            <div class="form-group">
+                <label class="sr-only" for="form-credit-card-number">Credit Card number</label>
+                <input type="text" name="form_credit_card_number"
+                        placeholder="Credit Card number..." 
+                        class="form-credit-card-number form-control" 
+                        [ngClass] = "{'input-error': (f3.submitted && !form_credit_card_number.valid)}"
+                        id="form-form-credit-card-number"
+                        [(ngModel)]="user.cardNumber"
+                        #form_credit_card_number="ngModel"
+                        pattern = "^[0-9]*$"
+                        required
+                        
+                >
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="form-credit-card-name">Credit Card name</label>
+                <input type="text" name="form_credit_card_name"
+                        placeholder="Credit Card name..." 
+                        class="form-credit-card-name form-control" 
+                        [ngClass] = "{'input-error': (f3.submitted && !form_credit_card_name.valid)}"
+                        id="form-form-credit-card-name"
+                        [(ngModel)]="user.cardName"
+                        #form_credit_card_name="ngModel"
+                        pattern="[a-zA-Z]+$"
+                        required
+                >
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="form-credit-card-cvc">Credit Card cvc</label>
+                <input type="text" name="form_credit_card_cvc"
+                        placeholder="Credit Card cvc..." 
+                        class="form-credit-card-cvc form-control" 
+                        [ngClass] = "{'input-error': (f3.submitted && !form_credit_card_cvc.valid)}"
+                        id="form-form-credit-card-cvc"
+                        [(ngModel)]="user.cardCvc"
+                        #form_credit_card_cvc="ngModel"
+                        pattern = "^[0-9]*$"
+                        required
+                >
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="form-credit-card-expiration-date">Credit Card expiration date</label>
+                <input type="text" name="form_credit_card_expiration_date"
+                        placeholder="Credit Card expiration date..." 
+                        class="form-credit-card-expiration-date form-control" 
+                        [ngClass] = "{'input-error': (f3.submitted && !cardDate)}"
+                        id="form-form-credit-card-expiration-date"
+                        [(ngModel)]="user.cardExpDate"
+                        #form_credit_card_expiration_date="ngModel"
+                        (ngModelChange)="dataChange($event)"
+                        required
+                >
+            </div>
+            <button type="button" class="btn btn-previous" (click)="prev()">Previous</button>
+            <button type="submit" class="btn">Sign me up!</button>
+          </div>
+        </div>
+      </form>
+      <!-- pattern="(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[012])\/(19|20)\d\d"-->
+      <!-- Forth step -->
+      <div *ngIf = "step == 4">
+        <div class="form-top">
+            <div class="form-top-left">
+                <h3>Registration was successful!</h3>
+            </div>
+            <div class="form-top-right">
+                <i class="fa fa-check"></i>
+            </div>
+        </div>
+      </div>
+  </div>
+</div>
