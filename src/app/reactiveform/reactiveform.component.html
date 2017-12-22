@@ -36,7 +36,7 @@
             <select class = "selectpicker form-control" 
                     formControlName="country"
                     [ngClass]="setClass('country')"
-                    (keyup)="shippingDataChange('country')"
+                    (change)="shippingDataChange('country')"
             >
               <option [ngValue]="null" hidden>Choose your country</option>
               <option *ngFor="let option of options" [ngValue]="option">
@@ -80,8 +80,7 @@
                    class="form-postal-code form-control" 
                    [ngClass]="setClass('postalCode')"
                    formControlName="postalCode"
-                   placeholder="Postal Code..." 
-                   [mask] = "postalCodeMask"
+                   placeholder="Postal Code..."
                    (keyup)="shippingDataChange('postalCode')"
             >
         </div>
@@ -98,6 +97,15 @@
               </option>
             </select>
         </div>
+        <div *ngIf = 'isLegalCompany' class="form-group">
+            <label class="sr-only" for="form-companyName">Company name</label>
+            <input class="form-control" 
+                   class="form-company-name form-control" 
+                   [ngClass]="setClass('companyName')"
+                   formControlName="companyName"
+                   placeholder="Company Name..." 
+            >
+        </div>
         <!-- Shipping details -->
         <div class="form-group">
             <input type='checkbox' 
@@ -111,6 +119,7 @@
             <select class = "selectpicker form-control" 
                     formControlName="shipCountry"
                     [ngClass]="setClass('shipCountry')"
+                    (change)="shippingDataChange('shipCountry')"
             >
               <option [ngValue]="null" hidden>Choose shipping country</option>
               <option *ngFor="let option of options" [ngValue]="option">
@@ -153,7 +162,7 @@
                    [ngClass]="setClass('shipPostalCode')"
                    formControlName="shipPostalCode"
                    placeholder="Shipping Postal Code..."
-                   [mask] = "shipPostalCodeMask" 
+                   
             >
         </div>
         <button type="submit" class="btn btn-next" (click)="nextBtn()">Next</button>
@@ -207,7 +216,7 @@
                        [(ngModel)]='package'                          
                 > Premium Package
             </div>
-            <button type="button" class="btn btn-previous" (click)="prev()">Previous</button>
+            <button type="button" class="btn btn-previous" (click)="prevBtn()">Previous</button>
             <button type="submit" class="btn btn-next" (click)="nextBtn()">Next</button>
         </div>
     </form>
@@ -226,9 +235,9 @@
         <div class="form-bottom">
             <div class="form-group">
                 <label class="sr-only" for="form-credit-card-number">Credit Card number</label>
-                <input class="form-control" 
-                       class="form-credit-card-number form-control" 
-                       [ngClass]="{'input-error': !cardNumberValid && step3.get('cardNumber').touched }"
+                <input class="form-control form-credit-card-number form-control {{ cardType ? 'form-credit-card-number-' + cardType : ''}}" 
+                       [ngClass]="{'input-error': !cardNumberValid && step3.get('cardNumber').touched  }"
+
                        formControlName="cardNumber"
                        placeholder="Credit Card number..." 
                        mask="0000 0000 0000 0000"
@@ -266,10 +275,80 @@
                        mask="00/00/0000"
                 >
             </div>
-            <button type="button" class="btn btn-previous" (click)="prev()">Previous</button>
-            <button type="submit" class="btn" (click)="nextBtn()">Sign me up!</button>
+            <button type="button" class="btn btn-previous" (click)="prevBtn()">Previous</button>
+            <button type="submit" class="btn" (click)="nextBtn()">Next</button>
         </div>
     </form>
+
+     <!-- Thorth step -->
+    <form >
+        <div *ngIf = 'currentStep == 4'>
+            <div class="form-top" >
+                <div class="form-top-left">
+                    <h3>All Your Information</h3>
+                    <label>First Name: </label>
+                    <p>{{ user.firstName }}</p>
+                    <label>Last Name: </label>
+                    <p>{{ user.lastName }}</p>
+                    <label>Country: </label>
+                    <p>{{ user.country }}</p>
+                    <label>City: </label>
+                    <p>{{ user.city }}</p>
+                    <label>Address: </label>
+                    <p>{{ user.address }}</p>
+                    <label>Address2: </label>
+                    <p>{{ user.address2 || empty }}</p>
+                    <label>Postal Code: </label>
+                    <p>{{ user.postalCode }}</p>
+                    <label>Legal: </label>
+                    <p>{{ user.legal }}</p>
+                    <label *ngIf = 'isLegalCompany' >Company Name: </label>
+                    <p *ngIf = 'isLegalCompany' >{{ user.companyName }}</p>
+                    <hr>
+                    <label>User Name: </label>
+                    <p>{{ user.userName }}</p>
+                    <label>Package: </label>
+                    <p>{{ user.package }}</p>
+                    <hr>
+                    <label>Credit Card number: </label>
+                    <p>{{ user.cardNumber }}</p>
+                    <label>Credit Card Name: </label>
+                    <p>{{ user.cardName }}</p>
+                    <label>Credit Card Cvc: </label>
+                    <p>{{ user.cardCvc }}</p>
+                    <label>Credit Card expiration date: </label>
+                    <p>{{ user.cardExpDate }}</p>
+                    <hr>
+                    <label>Shipping Country: </label>
+                    <p>{{ user.shipCountry }}</p>
+                    <label>Shipping City: </label>
+                    <p>{{ user.shipCity }}</p>
+                    <label>Shipping Address: </label>
+                    <p>{{ user.shipAddress }}</p>
+                    <label>Shipping Address2: </label>
+                    <p>{{ user.shipAddress2 || empty }}</p>
+                    <label>Shipping Postal Code: </label>
+                    <p>{{ user.shipPostalCode }}</p>
+                </div>
+            </div>
+            <div class="form-bottom">
+                <button type="button" class="btn btn-previous" (click)="prevBtn()">Previous</button>
+                <button type="button" class="btn" (click)="signUpBtn()">Sign up me!</button>
+            </div>
+        </div>
+    </form>
+
+     <!-- Alerting succesful registration -->
+    <div *ngIf = "currentStep == 5">
+            <div class="form-top">
+                <div class="form-top-left">
+                    <h3>Registration was successful!</h3>
+                </div>
+                <div class="form-top-right">
+                    <i class="fa fa-check"></i>
+                </div>
+            </div>
+          </div>
     
   </div>
 </div>

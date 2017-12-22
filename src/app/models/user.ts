@@ -2,19 +2,18 @@ export class User {
     id: number;
     firstName: string;
     lastName: string;
-    country: string;
+    country: any;
     city: string;
     address: string;
     address2: string;
     postalCode: string;
-    legal: string;
+    legal: any;
     // shipping data
-    shipCountry: string;
+    shipCountry: any;
     shipCity: string;
     shipAddress: string;
     shipAddress2: string;
     shipPostalCode: string;
-    shipLegal: string;
     //   ----
     userName: string;
     password: string;

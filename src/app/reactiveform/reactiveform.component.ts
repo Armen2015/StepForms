@@ -22,10 +22,11 @@ export class ReactiveformComponent implements OnInit {
   userNameValid: boolean;
   isDataChecked: boolean;
   user: User;
-  options = null;
-  postalCodeMask: string;
-  shipPostalCodeMask: string;
-  data;
+  options: any = null;
+  isLegalCompany: boolean;
+  cardType: string;
+  empty = 'Not metioned'
+  
 
   private step1SubmitAttempt: boolean = false;
   private step2SubmitAttempt: boolean = false;
@@ -41,8 +42,8 @@ export class ReactiveformComponent implements OnInit {
     this.cardDateValid = true;
     this.cardNumberValid = true;
     this.isDataChecked = false;
-    this.postalCodeMask = '0000';
-    this.shipPostalCodeMask = '0000';
+    this.isLegalCompany = false;
+    this.cardType = null;
     // First form init
     this.step1 = this.fb.group({
       firstName: ['', Validators.required],
@@ -51,8 +52,10 @@ export class ReactiveformComponent implements OnInit {
       city: ['', Validators.required],
       address: ['', Validators.required],
       address2: '',
-      postalCode: ['', Validators.required],
+      postalCode: ['', Validators.required
+      ],
       legal:  new FormControl(null, Validators.required),
+      companyName: ['', Validators.required],
       isDataChecked: new FormControl(false),
       shipCountry:  new FormControl(null, Validators.required),
       shipCity: ['', Validators.required],
@@ -75,6 +78,8 @@ export class ReactiveformComponent implements OnInit {
     });
   }
 
+
+
 /***************  Button events  **************/
 
   // Next button
@@ -89,34 +94,43 @@ export class ReactiveformComponent implements OnInit {
         control.markAsTouched({ onlySelf: true });       
       });
     } else {
+      if(this.userNameValid) return;
       if(this.currentStep == 3) {
         if(!this.cardDateValid || !this.cardNumberValid) return;
-        
         this.user = Object.assign(
-          {}, 
-          JSON.parse(JSON.stringify(this.step1.value)), 
+          {},
+          JSON.parse(JSON.stringify(this.step1.getRawValue())), 
           JSON.parse(JSON.stringify(this.step2.value)), 
           JSON.parse(JSON.stringify(this.step3.value))
         );
-        console.log(this.user);
-        this.userService.create(this.user)
-            .subscribe(
-                data => {
-                  console.log(data);
-                },
-                error => {
-                
-                });
+        var country = this.user.country.Country;
+        var legal = this.user.legal.label;
+        var shipCountry = this.user.shipCountry.Country;
+        this.user.country = country;
+        this.user.legal = legal;
+        this.user.shipCountry = shipCountry;
+        console.log('user', this.user);
       }
-      else this.currentStep++;
+      this.currentStep++;
     }
   }
 
   // Previous button
-  prev() {
+  prevBtn() {
     this.currentStep--;
   }
 
+  signUpBtn() {
+    this.userService.create(this.user)
+        .subscribe(
+            data => {
+              console.log(data);
+              this.currentStep++;
+            },
+            error => {
+            
+            });
+  }
 
 
 /************ OnChange Events  **********/
@@ -168,16 +182,44 @@ export class ReactiveformComponent implements OnInit {
 
   // If checkbox checked, watch for data changes
   shippingDataChange(form_element){
-    console.log('AAA');
+    if(form_element === 'country'){
+      var regex = this.step1.get('country').value.Regex;
+      this.step1.get('postalCode').setValidators([
+          Validators.required,
+          Validators.pattern(regex)
+      ]);
+      this.step1.get('postalCode').updateValueAndValidity();
+    }
+    if(form_element === 'shipCountry'){
+      var regex = this.step1.get('shipCountry').value.Regex;
+      this.step1.get('shipPostalCode').setValidators([
+          Validators.required,
+          Validators.pattern(regex)
+      ]);
+      this.step1.get('shipPostalCode').updateValueAndValidity();
+    }
+
+    if(form_element === 'legal'){
+      var value = this.step1.get(form_element).value.label;
+      if(value === 'Company'){
+        this.isLegalCompany = true;
+        this.step1.get('companyName').setValidators([ Validators.required ]);
+        this.step1.get('companyName').updateValueAndValidity();
+        return;
+      }
+      else {
+        this.step1.get('companyName').setValidators([ ]);
+        this.step1.get('companyName').updateValueAndValidity();
+      }
+      this.isLegalCompany = false;
+      this.step1.get('companyName').setValue('');
+      return;
+    }
+
     if(!this.isDataChecked) return;
     var shipKey = 'ship' + form_element.charAt(0).toUpperCase() + form_element.slice(1);
     this.step1.get(shipKey).setValue(this.step1.get(form_element).value);
   }
-
-  // 
-  // countryChange() {
-  //   console.log('AAA', this.step1.get('country').value);
-  // }
 
   // Check if username exists
   checkUserName(element) {
@@ -194,16 +236,16 @@ export class ReactiveformComponent implements OnInit {
 
   // Validates card number
   numberChange(e) {
+    this.cardType =  this.detectCardType(e);
     if(e.length == 16) this.cardNumberValid = true;
     else this.cardNumberValid = false;
   }
-
 
   // Watch for date changes
   dateChange(e) {
     if(e.length == 8) this.cardDateValid = true;
     else this.cardDateValid = false;
-}
+  }
 
   // Checks date
   checkDate(e, position, start, end) {
@@ -238,27 +280,20 @@ export class ReactiveformComponent implements OnInit {
     }
   }
 
-
-
-
-
-
-
-
-
+  // 
   detectCardType(number) {
     var re = {
         electron: /^(4026|417500|4405|4508|4844|4913|4917)\d+$/,
         maestro: /^(5018|5020|5038|5612|5893|6304|6759|6761|6762|6763|0604|6390)\d+$/,
-        dankort: /^(5019)\d+$/,
-        interpayment: /^(636)\d+$/,
-        unionpay: /^(62|88)\d+$/,
+        //dankort: /^(5019)\d+$/,
+        //interpayment: /^(636)\d+$/,
+        //unionpay: /^(62|88)\d+$/,
         visa: /^4[0-9]{12}(?:[0-9]{3})?$/,
         mastercard: /^5[1-5][0-9]{14}$/,
-        amex: /^3[47][0-9]{13}$/,
-        diners: /^3(?:0[0-5]|[68][0-9])[0-9]{11}$/,
+        //amex: /^3[47][0-9]{13}$/,
+        //diners: /^3(?:0[0-5]|[68][0-9])[0-9]{11}$/,
         discover: /^6(?:011|5[0-9]{2})[0-9]{12}$/,
-        jcb: /^(?:2131|1800|35\d{3})\d{11}$/
+        //jcb: /^(?:2131|1800|35\d{3})\d{11}$/
     }
 
     for(var key in re) {
@@ -266,16 +301,7 @@ export class ReactiveformComponent implements OnInit {
             return key
         }
     }
+    return null;
   }
-
-
-
-
-
-
-
-
-
-
 
 }

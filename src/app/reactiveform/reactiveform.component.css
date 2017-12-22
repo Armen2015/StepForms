@@ -147,14 +147,33 @@ input[type="radio"]:checked:before {
 .disabled {
     opacity: 0.7;
 }
-/*
-.radioError {
-    border-color:#FE7375 !important;
-} */
 
+.form-credit-card-number-visa {
+    background: url('../../assets/img/cards/visa.png') no-repeat  !important;
+    background-size: 50px 31.25px !important; 
+    background-position: right 10px top 6px !important;
+}
 
-/* input[type="radio"]:checked {
-  border-color:#FE7375 !important;
-} */
+.form-credit-card-number-discover {
+    background: url('../../assets/img/cards/discover.png') no-repeat  !important;
+    background-size: 50px 31.25px !important; 
+    background-position: right 10px top 6px !important;
+}
 
+.form-credit-card-number-electron {
+    background: url('../../assets/img/cards/electron.png') no-repeat  !important;
+    background-size: 50px 31.25px !important; 
+    background-position: right 10px top 6px !important;
+}
 
+.form-credit-card-number-maestro {
+    background: url('../../assets/img/cards/maestro.png') no-repeat  !important;
+    background-size: 50px 31.25px !important; 
+    background-position: right 10px top 6px !important;
+}
+
+.form-credit-card-number-mastercard {
+    background: url('../../assets/img/cards/mastercard.png') no-repeat  !important;
+    background-size: 50px 31.25px !important; 
+    background-position: right 10px top 6px !important;
+}
