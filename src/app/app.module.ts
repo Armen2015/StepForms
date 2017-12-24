@@ -14,6 +14,9 @@ import { UserService } from './services/user.service';
 import { HomeComponent } from './home/home.component';
 import { Routes, RouterModule } from '@angular/router';
 import { HttpModule } from '@angular/http';
+import { MyDate } from './pipes/myDate.pipe';
+import { CardNumber } from './pipes/cardNumber.pipe';
+
 
 /*const routes: Routes = [
   { path: '', redirectTo: '/register', pathMatch: 'full' },
@@ -27,7 +30,9 @@ import { HttpModule } from '@angular/http';
     HeaderComponent,
     FormComponent,
     ReactiveformComponent,
-    HomeComponent
+    HomeComponent,
+    MyDate,
+    CardNumber
   ],
   imports: [
     BrowserModule,

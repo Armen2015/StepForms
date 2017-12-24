@@ -286,49 +286,30 @@
             <div class="form-top" >
                 <div class="form-top-left">
                     <h3>All Your Information</h3>
-                    <label>First Name: </label>
-                    <p>{{ user.firstName }}</p>
-                    <label>Last Name: </label>
-                    <p>{{ user.lastName }}</p>
-                    <label>Country: </label>
-                    <p>{{ user.country }}</p>
-                    <label>City: </label>
-                    <p>{{ user.city }}</p>
-                    <label>Address: </label>
-                    <p>{{ user.address }}</p>
-                    <label>Address2: </label>
-                    <p>{{ user.address2 || empty }}</p>
-                    <label>Postal Code: </label>
-                    <p>{{ user.postalCode }}</p>
-                    <label>Legal: </label>
-                    <p>{{ user.legal }}</p>
+                    <label>First Name:</label> {{ user.firstName }}<br>
+                    <label>Last Name:</label> {{ user.lastName }}<br>
+                    <label>Country:</label> {{ user.country }}<br>
+                    <label>City: </label> {{ user.city }}<br>
+                    <label>Address: </label> {{ user.address }}<br>
+                    <label>Address2: </label> {{ user.address2 || empty }}<br>
+                    <label>Postal Code: </label> {{ user.postalCode }}<br>
+                    <label>Legal: </label> {{ user.legal }}<br>
                     <label *ngIf = 'isLegalCompany' >Company Name: </label>
-                    <p *ngIf = 'isLegalCompany' >{{ user.companyName }}</p>
+                    <span *ngIf = 'isLegalCompany' >{{ user.companyName }}<br></span>
                     <hr>
-                    <label>User Name: </label>
-                    <p>{{ user.userName }}</p>
-                    <label>Package: </label>
-                    <p>{{ user.package }}</p>
+                    <label>User Name: </label> {{ user.userName }}<br>
+                    <label>Package: </label> {{ user.package }}<br>
                     <hr>
-                    <label>Credit Card number: </label>
-                    <p>{{ user.cardNumber }}</p>
-                    <label>Credit Card Name: </label>
-                    <p>{{ user.cardName }}</p>
-                    <label>Credit Card Cvc: </label>
-                    <p>{{ user.cardCvc }}</p>
-                    <label>Credit Card expiration date: </label>
-                    <p>{{ user.cardExpDate }}</p>
+                    <label>Credit Card number: </label> {{ user.cardNumber | cardnumber}}<br>
+                    <label>Credit Card Name: </label> {{ user.cardName }}<br>
+                    <label>Credit Card Cvc: </label> {{ user.cardCvc }}<br>
+                    <label>Credit Card expiration date: </label> {{ user.cardExpDate | mydate }}<br>
                     <hr>
-                    <label>Shipping Country: </label>
-                    <p>{{ user.shipCountry }}</p>
-                    <label>Shipping City: </label>
-                    <p>{{ user.shipCity }}</p>
-                    <label>Shipping Address: </label>
-                    <p>{{ user.shipAddress }}</p>
-                    <label>Shipping Address2: </label>
-                    <p>{{ user.shipAddress2 || empty }}</p>
-                    <label>Shipping Postal Code: </label>
-                    <p>{{ user.shipPostalCode }}</p>
+                    <label>Shipping Country: </label> {{ user.shipCountry }}<br>
+                    <label>Shipping City: </label> {{ user.shipCity }}<br>
+                    <label>Shipping Address: </label> {{ user.shipAddress }}<br>
+                    <label>Shipping Address2: </label> {{ user.shipAddress2 || empty }}<br>
+                    <label>Shipping Postal Code: </label> {{ user.shipPostalCode }}<br>
                 </div>
             </div>
             <div class="form-bottom">

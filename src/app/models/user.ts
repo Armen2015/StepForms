@@ -19,8 +19,8 @@ export class User {
     password: string;
     package: string;
     // user card data
-    cardNumber: number;
+    cardNumber: string;
     cardName: string;
     cardCvc: number;
-    cardExpDate: number;
+    cardExpDate: string;
 }

@@ -38,6 +38,7 @@ export class ReactiveformComponent implements OnInit {
   ) { }
   ngOnInit() {
     this.user = new User();
+    this.user.firstName = 'Hello';
     this.options = Options;
     this.cardDateValid = true;
     this.cardNumberValid = true;
@@ -112,6 +113,7 @@ export class ReactiveformComponent implements OnInit {
         console.log('user', this.user);
       }
       this.currentStep++;
+      window.scrollTo(0, 0);
     }
   }
 
