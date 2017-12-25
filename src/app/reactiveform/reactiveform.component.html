@@ -90,6 +90,7 @@
                     formControlName="legal"
                     [ngClass]="setClass('legal')"
                     (change)="shippingDataChange('legal')"
+            
             >
               <option [ngValue]="null" hidden>Legal</option>
               <option *ngFor="let option of options.legalOptions" [ngValue]="option">
@@ -110,9 +111,9 @@
         <div class="form-group">
             <input type='checkbox' 
                    formControlName="isDataChecked" 
-                   (ngModelChange)="chBoxChange(s)"
+                   (click)="emitCheckboxClick()"
             >
-            <label>Use filled data for shipping</label>
+            <label (click) = "emitCheckboxClick()">Use filled data for shipping</label>
         </div>
         <div class="form-group">
             <label class="sr-only" for="form-country">Shipping country</label>
@@ -187,11 +188,10 @@
                    class="form-user-name form-control"
                    [ngClass]="setClass('userName')" 
                    formControlName="userName"
-                   placeholder="User name..." 
-                   mask="SSSSSSS000000"
+                   placeholder="UserName..." 
                    (keyup)="checkUserName(step2.get('userName'))"
                 >
-                <span *ngIf = "userNameValid" class = 'username_alert'>Username already exists!</span>
+                <span *ngIf = "userNameValid" class = 'user_alert'>Username already exists!</span>
             </div>
             <div class="form-group">
                 <label class="sr-only" for="form-password">Password</label>
@@ -201,6 +201,8 @@
                    formControlName="password"
                    placeholder="Password..." 
                 >
+                <span *ngIf = "step2.get('password').touched && step2.get('password').value.length < 8 && !step2.get('password').valid" 
+                       class = 'user_alert'>Password must be at least 8 characters long</span>
             </div>
             <div class="form-group">
                 <input type="radio" name="package" 
@@ -208,13 +210,101 @@
                        formControlName="package" 
                        [ngClass]="setClass('package')"
                        [(ngModel)]='package'
-                > Standard Package <br>
+                       (click) = "packageRadioBtnClick(1)"
+
+                > 
+                <span (click) = "packageRadioBtnClick(1)">Standard Package</span><br>
+                <div *ngIf = "step2.get('package').value == 'Standard Package'">
+                    <div class="form-group">
+                        <label class="sr-only" for="form-userName">Facebook link</label>
+                        <input class="form-control" 
+                            class="form-user-facebook form-control"
+                            [ngClass]="setClass('facebook')" 
+                            formControlName="facebook"
+                            placeholder="Facebook link..." 
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label class="sr-only" for="form-userName">Twitter link</label>
+                        <input class="form-control" 
+                            class="form-user-twitter form-control"
+                            [ngClass]="setClass('twitter')" 
+                            formControlName="twitter"
+                            placeholder="Twitter link..." 
+                        >
+                    </div>
+                </div>
                 <input type="radio" name="package"
                        value = 'Premium Package'  
                        formControlName="package" 
                        [ngClass]="setClass('package')"
-                       [(ngModel)]='package'                          
-                > Premium Package
+                       [(ngModel)]='package'    
+                       (click) = "packageRadioBtnClick(2)"
+
+                > 
+                <span (click) = "packageRadioBtnClick(2)">Premium Package</span>
+                <div *ngIf = "step2.get('package').value == 'Premium Package'">
+                    <div class="form-group">
+                        <label class="sr-only" for="form-country">How did You hear about this?</label>
+                        <select class = "selectpicker form-control" 
+                                formControlName="infoSource"
+                                [ngClass]="setClass('infoSource')"
+                                (change)="infoSourceDataChange()"
+                                
+                        >
+                          <option [ngValue]="null" hidden>Choose your source</option>
+                          <option *ngFor="let option of infoSources" [ngValue]="option">
+                            {{ option }}
+                          </option>
+                        </select>
+                    </div>
+                    <div *ngIf = "step2.get('infoSource').value === 'Friend'">
+                        <div class="form-group">
+                            <label class="sr-only" for="form-userName">Sponsor UserName</label>
+                            <input class="form-control" 
+                                class="form-user-name form-control"
+                                [ngClass]="setClass('sponsorUserName')" 
+                                formControlName="sponsorUserName"
+                                placeholder="Sponsor UserName..." 
+                            >
+                        </div>
+                        <div class="form-group">
+                            <label class="sr-only" for="form-userName">Sponsor FirstName</label>
+                            <input class="form-control" 
+                                class="form-user-name form-control"
+                                [ngClass]="setClass('sponsorFirstName')" 
+                                formControlName="sponsorFirstName"
+                                placeholder="Sponsor FirstName..." 
+                            >
+                        </div>
+                        <div class="form-group">
+                            <label class="sr-only" for="form-userName">Sponsor LastName</label>
+                            <input class="form-control" 
+                                class="form-user-name form-control"
+                                [ngClass]="setClass('sponsorLastName')" 
+                                formControlName="sponsorLastName"
+                                placeholder="Sponsor LastName..." 
+                            >
+                        </div>
+                        <button type="button" class="btn btn-next" (click)="findSponsorWindowBtn()">Find Sponsor</button>
+                        <popup (confirmClick)="findSponsorBtn()">
+                            <form class="form-horizontal">
+                                <label class="sr-only" for="form-userName">Sponsor UserName</label>
+                                <input class="form-control" name = "sponsorUserName"
+                                    placeholder="UserName..." 
+                                    [(ngModel)] = 'sponsorUserName'
+                                >
+                                <img *ngIf = "loading" src = "../assets/img/load.gif" width = "45px"><br>
+                                <span *ngIf = "errorSponser" class = 'user_alert'>Username not found!</span>
+                                <div *ngIf = "showSponsor">
+                                    <p>{{ sponsorFirstName }}  {{ sponsorLastName }}
+                                    <button type="button" class="btn btn-next add-sponsor" (click)="addSponsor()">+</button>
+                                </p>
+                                </div>
+                            </form>
+                        </popup>
+                    </div>
+                </div>
             </div>
             <button type="button" class="btn btn-previous" (click)="prevBtn()">Previous</button>
             <button type="submit" class="btn btn-next" (click)="nextBtn()">Next</button>
@@ -233,16 +323,16 @@
             </div>
         </div>
         <div class="form-bottom">
-            <div class="form-group">
+            <div class="form-group" id = "card">
                 <label class="sr-only" for="form-credit-card-number">Credit Card number</label>
-                <input class="form-control form-credit-card-number form-control {{ cardType ? 'form-credit-card-number-' + cardType : ''}}" 
-                       [ngClass]="{'input-error': !cardNumberValid && step3.get('cardNumber').touched  }"
-
+                <input class="form-control form-credit-card-number form-control" 
+                       [ngClass]="{'input-error': (!cardNumberValid) && step3.get('cardNumber').value != ''  }"
                        formControlName="cardNumber"
                        placeholder="Credit Card number..." 
-                       mask="0000 0000 0000 0000"
-                       (ngModelChange)="numberChange($event)"
+                       [(mask)]="cardMask"
+                       (keyup)="numberChange()"
                 >
+                <span class = "card-icon {{ cardType ? 'form-credit-card-number-' + cardType : ''}}" style = "width: 50px; height: 33.25px; display: inline-block;" ></span>
             </div>
             <div class="form-group">
                 <label class="sr-only" for="form-credit-card-name">Credit Card name</label>
@@ -261,7 +351,6 @@
                        [ngClass]="setClass('cardCvc')" 
                        formControlName="cardCvc"
                        placeholder="Credit Card cvc..."  
-                       mask="0000"
                 >
             </div>
             <div class="form-group">
@@ -280,7 +369,7 @@
         </div>
     </form>
 
-     <!-- Thorth step -->
+     <!-- Forth step -->
     <form >
         <div *ngIf = 'currentStep == 4'>
             <div class="form-top" >

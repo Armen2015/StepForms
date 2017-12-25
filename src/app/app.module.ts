@@ -16,6 +16,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { HttpModule } from '@angular/http';
 import { MyDate } from './pipes/myDate.pipe';
 import { CardNumber } from './pipes/cardNumber.pipe';
+import { PopupModule } from 'ng2-opd-popup';
 
 
 /*const routes: Routes = [
@@ -40,7 +41,8 @@ import { CardNumber } from './pipes/cardNumber.pipe';
     ReactiveFormsModule,
     NgxMaskModule.forRoot(),
     HttpClientModule,
-    HttpModule
+    HttpModule,
+    PopupModule.forRoot()
   ],
   providers: [
     UserService

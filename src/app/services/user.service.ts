@@ -14,4 +14,8 @@ export class UserService {
     checkUser(userName: string) {
         return this.http.post('http://localhost:8000/api/checkusers', {userName: userName});
     }
+
+    findSponsor(sponsorUserName: string) {
+        return this.http.post('http://localhost:8000/api/findsponsor', {sponsorUserName: sponsorUserName});
+    }
 }

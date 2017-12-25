@@ -3,7 +3,9 @@ import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms'
 import { UserService } from '../services/user.service';
 import { Options } from '../models/options';
 import { User } from '../models/user';
-
+import { ValidatePass } from '../validators/pass.validator';
+import { Popup } from 'ng2-opd-popup';
+ 
 
 @Component({
   selector: 'app-reactiveform',
@@ -15,7 +17,7 @@ export class ReactiveformComponent implements OnInit {
   step1: FormGroup;
   step2: FormGroup;
   step3: FormGroup;
-  currentStep = 1;
+  currentStep = 3;
   // card valid
   cardDateValid: boolean;
   cardNumberValid: boolean;
@@ -25,8 +27,16 @@ export class ReactiveformComponent implements OnInit {
   options: any = null;
   isLegalCompany: boolean;
   cardType: string;
-  empty = 'Not metioned'
+  empty = 'Not metioned';
+  sponsorUserName: string;
+  sponsorFirstName: string;
+  sponsorLastName: string;
+  loading: boolean = false;
+  showSponsor: boolean = false;
+  errorSponser: boolean = false;
+  cardMask = '0000 0000 0000 000';
   
+  infoSources = ['Google Search', 'Social Media', 'Friend'];
 
   private step1SubmitAttempt: boolean = false;
   private step2SubmitAttempt: boolean = false;
@@ -34,17 +44,18 @@ export class ReactiveformComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder, 
-    private userService: UserService
+    private userService: UserService,
+    private popup: Popup
   ) { }
   ngOnInit() {
     this.user = new User();
-    this.user.firstName = 'Hello';
     this.options = Options;
     this.cardDateValid = true;
-    this.cardNumberValid = true;
+    this.cardNumberValid = false;
     this.isDataChecked = false;
     this.isLegalCompany = false;
     this.cardType = null;
+    this.sponsorUserName = '';
     // First form init
     this.step1 = this.fb.group({
       firstName: ['', Validators.required],
@@ -57,7 +68,7 @@ export class ReactiveformComponent implements OnInit {
       ],
       legal:  new FormControl(null, Validators.required),
       companyName: ['', Validators.required],
-      isDataChecked: new FormControl(false),
+      isDataChecked: new FormControl(this.isDataChecked),
       shipCountry:  new FormControl(null, Validators.required),
       shipCity: ['', Validators.required],
       shipAddress: ['', Validators.required],
@@ -66,17 +77,43 @@ export class ReactiveformComponent implements OnInit {
     });
     // Second form init
     this.step2 = this.fb.group({
-      userName: ['', Validators.required],
-      password: ['', Validators.required],
-      package: ['', Validators.required]
+      userName: ['', Validators.compose([
+          Validators.required,
+          Validators.pattern('^[a-zA-Z0-9_.-]*$')
+        ])
+      ],
+      password: ['', [ Validators.required, Validators.minLength(2)/*, ValidatePass*/ ]],
+      //RegExp("^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})");
+      package: ['', Validators.required],
+      facebook: ['', Validators.compose([
+          Validators.required, 
+          Validators.pattern(/(?:https?:\/\/)?(?:www\.)?facebook\.com\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[\w\-]*\/)*([\w\-\.]*)/)
+        ])
+      ],
+      twitter: ['', Validators.compose([
+          Validators.required, 
+          Validators.pattern(/(?:http:\/\/)?(?:www\.)?twitter\.com\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[\w\-]*\/)*([\w\-]*)/)
+        ])
+      ],
+      infoSource: new FormControl(null, Validators.required),
+      sponsorUserName: ['', Validators.required],
+      sponsorFirstName: ['', Validators.required],
+      sponsorLastName: ['', Validators.required]
     });
     // Third form init
     this.step3 = this.fb.group({
       cardNumber: ['', Validators.required],
       cardName: ['', Validators.required],
-      cardCvc: ['', Validators.required],
+      cardCvc: ['', Validators.compose([
+          Validators.required, 
+          Validators.minLength(3),
+          Validators.pattern('^[0-9]+$')
+        ])
+      ],
       cardExpDate: ['', Validators.required]
     });
+
+    this.emitCheckboxClick();
   }
 
 
@@ -89,7 +126,7 @@ export class ReactiveformComponent implements OnInit {
     this["step" + this.currentStep + 'SubmitAttempt'] = true;
     //console.log(form.get('isDataChecked'));
     if (!form.valid) {
-      console.log(form.controls);
+      //console.log(form.controls);
       Object.keys(form.controls).forEach(field => { 
         const control = form.get(field);            
         control.markAsTouched({ onlySelf: true });       
@@ -113,7 +150,6 @@ export class ReactiveformComponent implements OnInit {
         console.log('user', this.user);
       }
       this.currentStep++;
-      window.scrollTo(0, 0);
     }
   }
 
@@ -132,6 +168,60 @@ export class ReactiveformComponent implements OnInit {
             error => {
             
             });
+  }
+
+  findSponsorWindowBtn(){
+    // Popup window options
+    this.popup.options = {
+      header: "Sponsor Search",
+      color: "#19B9E7", 
+      widthProsentage: 65, 
+      animationDuration: 1, 
+      showButtons: true, 
+      confirmBtnContent: "Search", 
+      cancleBtnContent: "Cancel", 
+      confirmBtnClass: "btn btn-next", 
+      cancleBtnClass: "btn btn-next", 
+      animation: "fadeInDown" // 'fadeInLeft', 'fadeInRight', 'fadeInUp', 'bounceIn','bounceInDown' 
+    };
+    this.popup.show(this.popup.options);
+  }
+
+  findSponsorBtn(){
+    this.errorSponser = false;
+    if(this.sponsorUserName === '') return;
+    if(!/\S/.test(this.sponsorUserName)) return;
+    this.loading = true;
+    this.sponsorUserName = this.sponsorUserName.trim();
+    this.userService.findSponsor(this.sponsorUserName)
+    .subscribe(
+      data => {
+        this.loading = false;
+        if(!data) this.errorSponser = true;
+        else {
+          for(var key in data){
+            if (key == 'sponsorFirstName') this.sponsorFirstName = data[key];
+            if (key == 'sponsorLastName') this.sponsorLastName = data[key];
+          }
+          this.showSponsor = true;
+        }
+      },
+      error => {
+        
+      }
+    )
+  }
+
+  addSponsor(){
+    this.step2.get('sponsorUserName').setValue(this.sponsorUserName);
+    this.step2.get('sponsorFirstName').setValue(this.sponsorFirstName);
+    this.step2.get('sponsorLastName').setValue(this.sponsorLastName);
+    this.popup.hide();
+    this.sponsorUserName = '';
+    this.sponsorFirstName = '';
+    this.sponsorLastName = '';
+    this.showSponsor = false;
+    this.errorSponser = false;
   }
 
 
@@ -160,9 +250,16 @@ export class ReactiveformComponent implements OnInit {
     (this[form].get(form_element).untouched && this[form + 'SubmitAttempt']);
   }
 
-  // If checkbox triggered, add filled data to shiping data
-  chBoxChange() {
-    this.isDataChecked = !this.step1.get('isDataChecked').value;
+  // Perform checkbox click
+  emitCheckboxClick(){
+    this.isDataChecked = !this.isDataChecked;
+    this.inputsStateToggle();
+    var el = this.step1.get('isDataChecked');
+    el.setValue(!el.value);
+  }
+
+  // If checkbox triggered, add filled data to shiping data or disable inputs
+  inputsStateToggle() {
     if(this.isDataChecked) {
       for(var key in this.step1.controls) {
         if(key.substring(0, 4) === 'ship') {
@@ -181,6 +278,18 @@ export class ReactiveformComponent implements OnInit {
       }
     }
   }
+
+  // Permorm package radio button click
+  packageRadioBtnClick(btn) {
+    if(btn === 1) {
+      this.step2.get('package').setValue('Standard Package');
+    }
+    if(btn === 2) {
+      this.step2.get('package').setValue('Premium Package');
+    }
+    this.packageDataChange()
+  }
+
 
   // If checkbox checked, watch for data changes
   shippingDataChange(form_element){
@@ -205,13 +314,11 @@ export class ReactiveformComponent implements OnInit {
       var value = this.step1.get(form_element).value.label;
       if(value === 'Company'){
         this.isLegalCompany = true;
-        this.step1.get('companyName').setValidators([ Validators.required ]);
-        this.step1.get('companyName').updateValueAndValidity();
+        this.updateValidators(this.step1.get('companyName'), [ Validators.required ]);
         return;
       }
       else {
-        this.step1.get('companyName').setValidators([ ]);
-        this.step1.get('companyName').updateValueAndValidity();
+        this.updateValidators(this.step1.get('companyName'), []);
       }
       this.isLegalCompany = false;
       this.step1.get('companyName').setValue('');
@@ -221,6 +328,11 @@ export class ReactiveformComponent implements OnInit {
     if(!this.isDataChecked) return;
     var shipKey = 'ship' + form_element.charAt(0).toUpperCase() + form_element.slice(1);
     this.step1.get(shipKey).setValue(this.step1.get(form_element).value);
+  }
+
+  updateValidators(form_element, validator){
+    form_element.setValidators(validator);
+    form_element.updateValueAndValidity();
   }
 
   // Check if username exists
@@ -233,13 +345,58 @@ export class ReactiveformComponent implements OnInit {
       },
       error => {
         
-      });
+      }
+    );
   }
 
+  // 
+  packageDataChange() {
+    var packageType = this.step2.get('package').value;
+    if(packageType === 'Standard Package') {
+      this.updateValidators(this.step2.get('facebook'), [ 
+        Validators.required,
+        Validators.pattern(/(?:https?:\/\/)?(?:www\.)?facebook\.com\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[\w\-]*\/)*([\w\-\.]*)/)
+      ]);
+      this.updateValidators(this.step2.get('twitter'), [ 
+        Validators.required,
+        Validators.pattern(/(?:http:\/\/)?(?:www\.)?twitter\.com\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[\w\-]*\/)*([\w\-]*)/) 
+      ]);
+      this.updateValidators(this.step2.get('infoSource'), []);
+      this.updateValidators(this.step2.get('sponsorUserName'), []);
+      this.updateValidators(this.step2.get('sponsorFirstName'), []);
+      this.updateValidators(this.step2.get('sponsorLastName'), []);
+    }
+    if(packageType === 'Premium Package') {
+      this.updateValidators(this.step2.get('facebook'), []);
+      this.updateValidators(this.step2.get('twitter'), []);
+      this.updateValidators(this.step2.get('infoSource'), [ 
+        Validators.required,
+      ]);
+      this.infoSourceDataChange();
+    }
+  }
+
+  //
+  infoSourceDataChange(){
+    if(this.step2.get('infoSource').value === 'Friend'){
+      this.updateValidators(this.step2.get('sponsorUserName'), [Validators.required]);
+      this.updateValidators(this.step2.get('sponsorFirstName'), [Validators.required]);
+      this.updateValidators(this.step2.get('sponsorLastName'), [Validators.required]);
+      return;
+    }
+    this.updateValidators(this.step2.get('sponsorUserName'), []);
+    this.updateValidators(this.step2.get('sponsorFirstName'), []);
+    this.updateValidators(this.step2.get('sponsorLastName'), []);
+  }
+  
+
   // Validates card number
-  numberChange(e) {
-    this.cardType =  this.detectCardType(e);
-    if(e.length == 16) this.cardNumberValid = true;
+  numberChange() {
+    var value = this.step3.get('cardNumber').value;
+    this.cardType =  this.detectCardType(value);
+    if(this.cardType !== 'amex') this.cardMask = '0000 0000 0000 0000';
+    else this.cardMask = '0000 0000 0000 000';
+    if(value.length === 16 || (this.cardType === 'amex' && value.length === 15)) this.cardNumberValid = true;
     else this.cardNumberValid = false;
   }
 
@@ -292,7 +449,7 @@ export class ReactiveformComponent implements OnInit {
         //unionpay: /^(62|88)\d+$/,
         visa: /^4[0-9]{12}(?:[0-9]{3})?$/,
         mastercard: /^5[1-5][0-9]{14}$/,
-        //amex: /^3[47][0-9]{13}$/,
+        amex: /^3[47][0-9]{13}$/,
         //diners: /^3(?:0[0-5]|[68][0-9])[0-9]{11}$/,
         discover: /^6(?:011|5[0-9]{2})[0-9]{12}$/,
         //jcb: /^(?:2131|1800|35\d{3})\d{11}$/

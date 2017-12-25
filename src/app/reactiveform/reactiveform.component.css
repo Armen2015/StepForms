@@ -34,12 +34,12 @@ input[type="radio"] {
 
 input:focus, 
 select:focus {
-	outline: 0;
+	/*outline: 0;
 	background: #fff !important;
     border: 3px solid #ccc !important;
     -moz-box-shadow: none !important; 
     -webkit-box-shadow: none !important;
-     box-shadow: none !important;
+     box-shadow: none !important;*/
 }
 
 button.btn {
@@ -140,7 +140,7 @@ input[type="radio"]:checked:before {
     background: #666666;
 }
 
-.username_alert {
+.user_alert {
     color: #FE7375;
 }
 
@@ -150,30 +150,52 @@ input[type="radio"]:checked:before {
 
 .form-credit-card-number-visa {
     background: url('../../assets/img/cards/visa.png') no-repeat  !important;
-    background-size: 50px 31.25px !important; 
-    background-position: right 10px top 6px !important;
+    background-size: 100% !important; 
 }
 
 .form-credit-card-number-discover {
     background: url('../../assets/img/cards/discover.png') no-repeat  !important;
-    background-size: 50px 31.25px !important; 
-    background-position: right 10px top 6px !important;
+    background-size: 100% !important; 
 }
 
 .form-credit-card-number-electron {
     background: url('../../assets/img/cards/electron.png') no-repeat  !important;
-    background-size: 50px 31.25px !important; 
-    background-position: right 10px top 6px !important;
+    background-size: 100% !important; 
 }
 
 .form-credit-card-number-maestro {
     background: url('../../assets/img/cards/maestro.png') no-repeat  !important;
-    background-size: 50px 31.25px !important; 
-    background-position: right 10px top 6px !important;
+    background-size: 100% !important; 
 }
 
 .form-credit-card-number-mastercard {
     background: url('../../assets/img/cards/mastercard.png') no-repeat  !important;
-    background-size: 50px 31.25px !important; 
-    background-position: right 10px top 6px !important;
+    background-size: 100% !important; 
+   
+}
+
+.form-credit-card-number-amex {
+    background: url('../../assets/img/cards/amex.png') no-repeat  !important;
+    background-size: 100% !important; 
+}
+
+#card {
+    position: relative;
+}
+
+.card-icon {
+    position: absolute;
+    top: 9px;
+    right: 8px;
+}
+
+.add-sponsor {
+    min-width: 30px !important;
+    min-height: 30px !important;
+    width: 30px !important;
+    height: 30px !important;
+    line-height: 30px !important;
+    float: right !important;
+    border-radius: 50% !important;
+    padding: 0px !important;
 }
