@@ -1,0 +1,145 @@
+<div class="row">
+    <div class="col-sm-6 col-sm-offset-3 form-box">
+       <!-- Second step -->
+      <form class="registration-form" [formGroup]="step2"  novalidate>
+        <div class="form-top">
+            <div class="form-top-left">
+                <h3>Step 2 / 3</h3>
+                <p>Choose a package:</p>
+            </div>
+            <div class="form-top-right">
+                <i class="fa fa-window-restore"></i>
+            </div>
+        </div>
+        <div class="form-bottom">
+            <div class="form-group">
+                <label class="sr-only" for="form-userName">UserName</label>
+                <input class="form-control" 
+                   class="form-user-name form-control"
+                   [ngClass]="setClass('userName')" 
+                   formControlName="userName"
+                   placeholder="UserName..." 
+                   (keyup)="checkUserName(step2.get('userName'))"
+                   [(ngModel)] = "user.userName"
+                >
+                <span *ngIf = "userNameValid" class = 'user_alert'>Username already exists!</span>
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="form-password">Password</label>
+                <input class="form-control" type="password"
+                   class="form-password form-control"
+                   [ngClass]="setClass('password')" 
+                   formControlName="password"
+                   placeholder="Password..." 
+                   [(ngModel)] = "user.password"
+                >
+                <span *ngIf = "step2.get('password').touched && step2.get('password').value.length < 8 && !step2.get('password').valid" 
+                       class = 'user_alert'>Password must be at least 8 characters long</span>
+            </div>
+            <div class="form-group">
+                <input type="radio" name="package" 
+                       value = 'Standard Package'
+                       formControlName="package" 
+                       [ngClass]="setClass('package')"
+                       [(ngModel)]='user.package'
+                       (click) = "packageRadioBtnClick('Standard Package')"
+                      
+                > 
+                <span (click) = "packageRadioBtnClick('Standard Package')">Standard Package</span><br>
+                <div *ngIf = "step2.get('package').value == 'Standard Package'">
+                    <div class="form-group">
+                        <label class="sr-only" for="form-userName">Facebook link</label>
+                        <input class="form-control" 
+                            class="form-user-facebook form-control"
+                            [ngClass]="setClass('facebook')" 
+                            formControlName="facebook"
+                            placeholder="Facebook link..." 
+                            [(ngModel)]='user.facebook'
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label class="sr-only" for="form-userName">Twitter link</label>
+                        <input class="form-control" 
+                            class="form-user-twitter form-control"
+                            [ngClass]="setClass('twitter')" 
+                            formControlName="twitter"
+                            placeholder="Twitter link..."
+                            [(ngModel)]='user.twitter' 
+                        >
+                    </div>
+                </div>
+                <input type="radio" name="package"
+                       value = 'Premium Package'  
+                       formControlName="package" 
+                       [ngClass]="setClass('package')"
+                       [(ngModel)]='user.package'    
+                       (click) = "packageRadioBtnClick('Premium Package')"
+                      
+
+                > 
+                <span (click) = "packageRadioBtnClick('Premium Package')">Premium Package</span>
+                <div *ngIf = "step2.get('package').value == 'Premium Package'">
+                    <div class="form-group">
+                        <label class="sr-only" for="form-country">How did You hear about this?</label>
+                        <select class = "selectpicker form-control" 
+                                formControlName="infoSource"
+                                [ngClass]="setClass('infoSource')"
+                        >
+                          <option [ngValue]="null" hidden>Choose your source</option>
+                          <option *ngFor="let option of infoSources" [ngValue]="option">
+                            {{ option }}
+                          </option>
+                        </select>
+                    </div>
+                    <div *ngIf = "step2.get('infoSource').value === 'Friend'">
+                        <div class="form-group">
+                            <label class="sr-only" for="form-userName">Sponsor UserName</label>
+                            <input class="form-control" 
+                                class="form-user-name form-control hideDisabledCursor"
+                                [ngClass]="{ 'input-error': !isSponsorValid && step2.get('sponsorUserName').touched || btnSubm }" 
+                                formControlName="sponsorUserName"
+                                placeholder="Sponsor UserName..." 
+                            >
+                        </div>
+                        <div class="form-group">
+                            <label class="sr-only" for="form-userName">Sponsor FirstName</label>
+                            <input class="form-control hideDisabledCursor" 
+                                [ngClass]="{ 'input-error': !isSponsorValid && step2.get('sponsorFirstName').touched || btnSubm }" 
+                                formControlName="sponsorFirstName"
+                                placeholder="Sponsor FirstName..." 
+                            >
+                        </div>
+                        <div class="form-group">
+                            <label class="sr-only" for="form-userName">Sponsor LastName</label>
+                            <input class="form-control hideDisabledCursor" 
+                                [ngClass]="{ 'input-error': !isSponsorValid && step2.get('sponsorLastName').touched || btnSubm }" 
+                                formControlName="sponsorLastName"
+                                placeholder="Sponsor LastName..." 
+                            >
+                        </div>
+                        <button type="button" class="btn btn-next" (click)="findSponsorWindowBtn()">Find Sponsor</button>
+                        <popup (confirmClick)="findSponsorBtn()">
+                            <form class="form-horizontal">
+                                <label class="sr-only" for="form-userName">Sponsor UserName</label>
+                                <input class="form-control" name = "sponsorUserName"
+                                    placeholder="UserName..." 
+                                    [(ngModel)] = 'sponsorUserName'
+                                >
+                                <img *ngIf = "loading" src = "../assets/img/load.gif" width = "45px"><br>
+                                <span *ngIf = "errorSponser" class = 'user_alert'>Username not found!</span>
+                                <div *ngIf = "showSponsor">
+                                    <p>{{ sponsorFirstName }}  {{ sponsorLastName }}
+                                    <button type="button" class="btn btn-next add-sponsor" (click)="addSponsor()">+</button>
+                                </p>
+                                </div>
+                            </form>
+                        </popup>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-previous" (click)="prevBtn()">Previous</button>
+            <button type="submit" class="btn btn-next" (click)="nextBtn()">Next</button>
+        </div>
+    </form>
+    </div>
+</div>

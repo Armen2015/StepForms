@@ -1,0 +1,186 @@
+<div class="row">
+  <div class="col-sm-6 col-sm-offset-3 form-box">
+      <form class="registration-form" [formGroup]="step1"  novalidate>
+          <div class="form-top">
+              <div class="form-top-left">
+                  <h3>Step 1 / 3</h3>
+                  <p>Tell us who you are:</p>
+              </div>
+              <div class="form-top-right">
+                  <i class="fa fa-user"></i>
+              </div>
+          </div>
+          <div class="form-bottom">
+            <div class="form-group">
+                <label class="sr-only" for="form-first-name">First name</label>
+                <input class="form-control" 
+                       class="form-first-name form-control"
+                       [ngClass]="setClass('firstName')" 
+                       formControlName="firstName"
+                       placeholder="First name..." 
+                       mask="SSSSSSSSSSSS"
+                       [(ngModel)] = "user.firstName"
+                >
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="form-last-name">Last name</label>
+                <input class="form-control" 
+                       class="form-last-name form-control" 
+                       [ngClass]="setClass('lastName')" 
+                       formControlName="lastName"
+                       placeholder="Last name..." 
+                       mask="SSSSSSSSSSSS"
+                       [(ngModel)] = "user.lastName"
+                >
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="form-country">Country</label>
+                <select class = "selectpicker form-control" 
+                        formControlName="country"
+                        [ngClass]="setClass('country')"
+                        (change)="shippingDataChange('country')"
+                        [(ngModel)] = "user.country"
+                >
+                  <option [ngValue]="null" hidden>Choose your country</option>
+                  <option *ngFor="let option of options" [ngValue]="option.Country">
+                    {{option.Country}}
+                  </option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="form-city">City</label>
+                <input class="form-control" 
+                       class="form-city form-control" 
+                       [ngClass]="setClass('city')"
+                       formControlName="city"
+                       placeholder="City..." 
+                       mask="SSSSSSSSSSSS"
+                       (keyup)="shippingDataChange('city')"
+                       [(ngModel)] = "user.city"
+                >
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="form-address">Address</label>
+                <input class="form-control" 
+                       class="form-address form-control" 
+                       [ngClass]="setClass('address')"
+                       formControlName="address"
+                       placeholder="Address..." 
+                       (keyup)="shippingDataChange('address')"
+                       [(ngModel)] = "user.address"
+                >
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="form-address2">Address2</label>
+                <input class="form-control" 
+                       class="form-address2 form-control" 
+                       formControlName="address2"
+                       placeholder="Address2..." 
+                       (keyup)="shippingDataChange('address2')"
+                       [(ngModel)] = "user.address2"
+                >
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="form-postalCode">Postal Code</label>
+                <input class="form-control" 
+                       class="form-postal-code form-control" 
+                       [ngClass]="setClass('postalCode')"
+                       formControlName="postalCode"
+                       placeholder="Postal Code..."
+                       (keyup)="shippingDataChange('postalCode')"
+                       [(ngModel)] = "user.postalCode"
+                >
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="form-legal">Legal</label>
+                <select class = "selectpicker form-control" 
+                        formControlName="legal"
+                        [ngClass]="setClass('legal')"
+                        (change)="shippingDataChange('legal')"
+                        [(ngModel)] = "user.legal"
+                >
+                  <option [ngValue]="null" hidden>Legal</option>
+                  <option *ngFor="let option of options.legalOptions" [ngValue]="option.label">
+                    {{option.label}}
+                  </option>
+                </select>
+            </div>
+            <div *ngIf = 'isLegalCompany || user.companyName' class="form-group">
+                <label class="sr-only" for="form-companyName">Company name</label>
+                <input class="form-control" 
+                       class="form-company-name form-control" 
+                       [ngClass]="setClass('companyName')"
+                       formControlName="companyName"
+                       placeholder="Company Name..."
+                       [(ngModel)] = "user.companyName"
+                >
+            </div>
+            <!-- Shipping details -->
+            <div class="form-group">
+                <input type='checkbox' 
+                       formControlName="isDataChecked" 
+                       (click)="emitCheckboxClick()"
+                       [(ngModel)] = "user.isChecked"
+                >
+                <label (click) = "emitCheckboxClick()">Use filled data for shipping</label>
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="form-country">Shipping country</label>
+                <select class = "selectpicker form-control" 
+                        formControlName="shipCountry"
+                        [ngClass]="setClass('shipCountry')"
+                        (change)="shippingDataChange('shipCountry')"
+                        [(ngModel)] = "user.shipCountry"
+                >
+                  <option [ngValue]="null" hidden>Choose shipping country</option>
+                  <option *ngFor="let option of options" [ngValue]="option.Country">
+                    {{option.Country}}
+                  </option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="form-city">Shipping city</label>
+                <input class="form-control" 
+                       class="form-city form-control" 
+                       [ngClass]="setClass('shipCity')"
+                       formControlName="shipCity"
+                       placeholder="Shipping city..." 
+                       mask="SSSSSSSSSSSS"
+                       [(ngModel)] = "user.shipCity"
+                >
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="form-address">Shipping address</label>
+                <input class="form-control" 
+                       class="form-address form-control" 
+                       [ngClass]="setClass('shipAddress')"
+                       formControlName="shipAddress"
+                       placeholder="Shipping address..." 
+                       [(ngModel)] = "user.shipAddress"
+                >
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="form-address2">Shipping address2</label>
+                <input class="form-control" 
+                       class="form-address2 form-control" 
+                       [ngClass]="{ 'disabled': isDataChecked }"
+                       formControlName="shipAddress2"
+                       placeholder="Shiping address2..." 
+                       [(ngModel)] = "user.shipAddress2"
+                >
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="form-postalCode">Shiping Postal Code</label>
+                <input class="form-control" 
+                       class="form-postal-code form-control" 
+                       [ngClass]="setClass('shipPostalCode')"
+                       formControlName="shipPostalCode"
+                       placeholder="Shipping Postal Code..."
+                       [(ngModel)] = "user.shipPostalCode"
+                >
+            </div>
+            <button type="submit" class="btn btn-next" (click)="nextBtn()">Next</button>
+          </div>
+        </form>
+  </div>
+</div>

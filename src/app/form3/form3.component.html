@@ -1,0 +1,61 @@
+<div class="row">
+    <div class="col-sm-6 col-sm-offset-3 form-box">
+      <!-- Third step -->
+      <form class="registration-form" [formGroup]="step3"  novalidate>
+        <div class="form-top">
+            <div class="form-top-left">
+                <h3>Step 3 / 3</h3>
+                <p>Fill your credit card details:</p>
+            </div>
+            <div class="form-top-right">
+                <i class="fa fa-credit-card-alt"></i>
+            </div>
+        </div>
+        <div class="form-bottom">
+            <div class="form-group" id = "card">
+                <label class="sr-only" for="form-credit-card-number">Credit Card number</label>
+                <input class="form-control form-credit-card-number form-control" 
+                       [ngClass]="{'input-error': (!cardNumberValid) && step3.get('cardNumber').value != ''  }"
+                       formControlName="cardNumber"
+                       placeholder="Credit Card number..." 
+                       [(mask)]="cardMask"
+                       (keyup)="numberChange()"
+                >
+                <span class = "card-icon {{ cardType ? 'form-credit-card-number-' + cardType : ''}}" style = "width: 50px; height: 33.25px; display: inline-block;" ></span>
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="form-credit-card-name">Credit Card name</label>
+                <input class="form-control" 
+                       class="form-credit-card-name form-control" 
+                       [ngClass]="setClass('cardName')" 
+                       formControlName="cardName"
+                       placeholder="Credit Card name..." 
+                       mask="SSSSSSSSSSSS"
+                >
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="form-credit-card-cvc">Credit Card cvc</label>
+                <input class="form-control" 
+                       class="form-credit-card-cvc form-control" 
+                       [ngClass]="setClass('cardCvc')" 
+                       formControlName="cardCvc"
+                       placeholder="Credit Card cvc..."  
+                >
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="form-credit-card-expiration-date">Credit Card expiration date</label>
+                <input class="form-control" name = "form_credit_card_expiration_date"
+                       class="form-credit-card-expiration-date form-control"           
+                       [ngClass]="{'input-error': !cardDateValid && step3.get('cardExpDate').touched }"
+                       formControlName="cardExpDate"
+                       placeholder="Credit Card expiration date..."
+                       (ngModelChange)="dateChange($event)"
+                       mask="00/00/0000"
+                >
+            </div>
+            <button type="button" class="btn btn-previous" (click)="prevBtn()">Previous</button>
+            <button type="submit" class="btn" (click)="nextBtn()">Next</button>
+        </div>
+    </form>
+    </div>
+</div>

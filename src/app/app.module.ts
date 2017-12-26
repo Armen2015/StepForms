@@ -4,7 +4,6 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
-import { FormComponent } from './form/form.component';
 import { FormsModule } from '@angular/forms';
 import { ReactiveformComponent } from './reactiveform/reactiveform.component';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -17,23 +16,25 @@ import { HttpModule } from '@angular/http';
 import { MyDate } from './pipes/myDate.pipe';
 import { CardNumber } from './pipes/cardNumber.pipe';
 import { PopupModule } from 'ng2-opd-popup';
+import { Form1Component } from './form1/form1.component';
+import { ReactformComponent } from './reactform/reactform.component';
+import { AppRoutingModule }     from './app-routing.module';
+import { Form2Component } from './form2/form2.component';
+import { Form3Component } from './form3/form3.component';
 
-
-/*const routes: Routes = [
-  { path: '', redirectTo: '/register', pathMatch: 'full' },
-  { path: 'register', component: DashboardComponent },
-  { path: 'heroes', component: HeroesComponent }
-];*/
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
-    FormComponent,
     ReactiveformComponent,
     HomeComponent,
     MyDate,
-    CardNumber
+    CardNumber,
+    Form1Component,
+    ReactformComponent,
+    Form2Component,
+    Form3Component
   ],
   imports: [
     BrowserModule,
@@ -42,7 +43,8 @@ import { PopupModule } from 'ng2-opd-popup';
     NgxMaskModule.forRoot(),
     HttpClientModule,
     HttpModule,
-    PopupModule.forRoot()
+    PopupModule.forRoot(),
+    AppRoutingModule
   ],
   providers: [
     UserService

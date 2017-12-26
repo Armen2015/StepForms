@@ -262,26 +262,24 @@
                         <div class="form-group">
                             <label class="sr-only" for="form-userName">Sponsor UserName</label>
                             <input class="form-control" 
-                                class="form-user-name form-control"
-                                [ngClass]="setClass('sponsorUserName')" 
+                                class="form-user-name form-control hideDisabledCursor"
+                                [ngClass]="{ 'input-error': !isSponsorValid && step2.get('sponsorUserName').touched || btnSubm }" 
                                 formControlName="sponsorUserName"
                                 placeholder="Sponsor UserName..." 
                             >
                         </div>
                         <div class="form-group">
                             <label class="sr-only" for="form-userName">Sponsor FirstName</label>
-                            <input class="form-control" 
-                                class="form-user-name form-control"
-                                [ngClass]="setClass('sponsorFirstName')" 
+                            <input class="form-control hideDisabledCursor" 
+                                [ngClass]="{ 'input-error': !isSponsorValid && step2.get('sponsorFirstName').touched || btnSubm }" 
                                 formControlName="sponsorFirstName"
                                 placeholder="Sponsor FirstName..." 
                             >
                         </div>
                         <div class="form-group">
                             <label class="sr-only" for="form-userName">Sponsor LastName</label>
-                            <input class="form-control" 
-                                class="form-user-name form-control"
-                                [ngClass]="setClass('sponsorLastName')" 
+                            <input class="form-control hideDisabledCursor" 
+                                [ngClass]="{ 'input-error': !isSponsorValid && step2.get('sponsorLastName').touched || btnSubm }" 
                                 formControlName="sponsorLastName"
                                 placeholder="Sponsor LastName..." 
                             >

@@ -34,7 +34,9 @@ export class ReactiveformComponent implements OnInit {
   loading: boolean = false;
   showSponsor: boolean = false;
   errorSponser: boolean = false;
+  isSponsorValid: boolean = false;
   cardMask = '0000 0000 0000 000';
+  btnSubm: boolean = false;
   
   infoSources = ['Google Search', 'Social Media', 'Friend'];
 
@@ -64,8 +66,7 @@ export class ReactiveformComponent implements OnInit {
       city: ['', Validators.required],
       address: ['', Validators.required],
       address2: '',
-      postalCode: ['', Validators.required
-      ],
+      postalCode: ['', Validators.required],
       legal:  new FormControl(null, Validators.required),
       companyName: ['', Validators.required],
       isDataChecked: new FormControl(this.isDataChecked),
@@ -96,10 +97,15 @@ export class ReactiveformComponent implements OnInit {
         ])
       ],
       infoSource: new FormControl(null, Validators.required),
-      sponsorUserName: ['', Validators.required],
-      sponsorFirstName: ['', Validators.required],
-      sponsorLastName: ['', Validators.required]
+      sponsorUserName: '',
+      sponsorFirstName: '',
+      sponsorLastName: ''
     });
+    this.step2.get('sponsorUserName').disable();
+    this.step2.get('sponsorFirstName').disable();
+    this.step2.get('sponsorLastName').disable();
+
+
     // Third form init
     this.step3 = this.fb.group({
       cardNumber: ['', Validators.required],
@@ -133,6 +139,14 @@ export class ReactiveformComponent implements OnInit {
       });
     } else {
       if(this.userNameValid) return;
+      //if(form.get('infoSource').value === 'Friend' && !this.isSponsorValid) return;
+      if(form.get('infoSource').value === 'Friend') {
+        if(!this.isSponsorValid) {
+          this.btnSubm = true;
+          return;
+        }
+      }
+
       if(this.currentStep == 3) {
         if(!this.cardDateValid || !this.cardNumberValid) return;
         this.user = Object.assign(
@@ -216,12 +230,15 @@ export class ReactiveformComponent implements OnInit {
     this.step2.get('sponsorUserName').setValue(this.sponsorUserName);
     this.step2.get('sponsorFirstName').setValue(this.sponsorFirstName);
     this.step2.get('sponsorLastName').setValue(this.sponsorLastName);
+    this.isSponsorValid = true;
+
     this.popup.hide();
     this.sponsorUserName = '';
     this.sponsorFirstName = '';
     this.sponsorLastName = '';
     this.showSponsor = false;
     this.errorSponser = false;
+    this.btnSubm = false;
   }
 
 
@@ -362,9 +379,9 @@ export class ReactiveformComponent implements OnInit {
         Validators.pattern(/(?:http:\/\/)?(?:www\.)?twitter\.com\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[\w\-]*\/)*([\w\-]*)/) 
       ]);
       this.updateValidators(this.step2.get('infoSource'), []);
-      this.updateValidators(this.step2.get('sponsorUserName'), []);
+      /*this.updateValidators(this.step2.get('sponsorUserName'), []);
       this.updateValidators(this.step2.get('sponsorFirstName'), []);
-      this.updateValidators(this.step2.get('sponsorLastName'), []);
+      this.updateValidators(this.step2.get('sponsorLastName'), []);*/
     }
     if(packageType === 'Premium Package') {
       this.updateValidators(this.step2.get('facebook'), []);
@@ -378,15 +395,15 @@ export class ReactiveformComponent implements OnInit {
 
   //
   infoSourceDataChange(){
-    if(this.step2.get('infoSource').value === 'Friend'){
-      this.updateValidators(this.step2.get('sponsorUserName'), [Validators.required]);
-      this.updateValidators(this.step2.get('sponsorFirstName'), [Validators.required]);
-      this.updateValidators(this.step2.get('sponsorLastName'), [Validators.required]);
-      return;
-    }
-    this.updateValidators(this.step2.get('sponsorUserName'), []);
-    this.updateValidators(this.step2.get('sponsorFirstName'), []);
-    this.updateValidators(this.step2.get('sponsorLastName'), []);
+    // if(this.step2.get('infoSource').value === 'Friend'){
+    //   this.updateValidators(this.step2.get('sponsorUserName'), [Validators.required]);
+    //   this.updateValidators(this.step2.get('sponsorFirstName'), [Validators.required]);
+    //   this.updateValidators(this.step2.get('sponsorLastName'), [Validators.required]);
+    //   return;
+    // }
+    // this.updateValidators(this.step2.get('sponsorUserName'), []);
+    // this.updateValidators(this.step2.get('sponsorFirstName'), []);
+    // this.updateValidators(this.step2.get('sponsorLastName'), []);
   }
   
 
